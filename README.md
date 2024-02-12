@@ -12,14 +12,14 @@ Find out more here: [https://developer.paypal.com/docs/api/orders/v2/](https://d
 Run the following command from your project directory to install the package from npm:
 
 ```ts
-npm install test-paypal-sdk@1.0.2
+npm install test-paypal-sdk@1.0.3
 ```
 
-For additional package details, see the [Npm page for the test-paypal-sdk@1.0.2 npm](https://www.npmjs.com/package/test-paypal-sdk/v/1.0.2).
+For additional package details, see the [Npm page for the test-paypal-sdk@1.0.3 npm](https://www.npmjs.com/package/test-paypal-sdk/v/1.0.3).
 
 ## Initialize the API Client
 
-**_Note:_** Documentation for the client can be found [here.](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.2/doc/client.md)
+**_Note:_** Documentation for the client can be found [here.](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.3/doc/client.md)
 
 The following parameters are configurable for the API Client:
 
@@ -216,16 +216,16 @@ if (previousToken) {
 
 ## List of APIs
 
-* [O Auth Authorization](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.2/doc/controllers/o-auth-authorization.md)
-* [Orders](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.2/doc/controllers/orders.md)
-* [Authorizations](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.2/doc/controllers/authorizations.md)
-* [Captures](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.2/doc/controllers/captures.md)
-* [Refunds](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.2/doc/controllers/refunds.md)
-* [Payment-Tokens](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.2/doc/controllers/payment-tokens.md)
-* [Setup-Tokens](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.2/doc/controllers/setup-tokens.md)
+* [O Auth Authorization](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.3/doc/controllers/o-auth-authorization.md)
+* [Orders](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.3/doc/controllers/orders.md)
+* [Authorizations](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.3/doc/controllers/authorizations.md)
+* [Captures](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.3/doc/controllers/captures.md)
+* [Refunds](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.3/doc/controllers/refunds.md)
+* [Payment-Tokens](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.3/doc/controllers/payment-tokens.md)
+* [Setup-Tokens](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.3/doc/controllers/setup-tokens.md)
 
 ## Classes Documentation
 
-* [ApiResponse](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.2/doc/api-response.md)
-* [ApiError](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.2/doc/api-error.md)
+* [ApiResponse](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.3/doc/api-response.md)
+* [ApiError](https://www.github.com/moizgillani/paypal-merged-api-js-sdk/tree/1.0.3/doc/api-error.md)
 
