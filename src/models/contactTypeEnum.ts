@@ -7,17 +7,18 @@
 import { Schema, stringEnum } from '../schema';
 
 /**
- * Enum for PhoneTypeEnum
+ * Enum for ContactTypeEnum
  */
-export enum PhoneTypeEnum {
+export enum ContactTypeEnum {
   FAX = 'FAX',
   HOME = 'HOME',
   MOBILE = 'MOBILE',
   OTHER = 'OTHER',
   PAGER = 'PAGER',
+  WORK = 'WORK',
 }
 
 /**
- * Schema for PhoneTypeEnum
+ * Schema for ContactTypeEnum
  */
-export const phoneTypeEnumSchema: Schema<PhoneTypeEnum> = stringEnum(PhoneTypeEnum);
+export const contactTypeEnumSchema: Schema<ContactTypeEnum> = stringEnum(ContactTypeEnum);
