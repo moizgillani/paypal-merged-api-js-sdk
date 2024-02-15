@@ -7,12 +7,12 @@
 import { OAuthToken } from './models/oAuthToken';
 import { ClientInterface } from "./clientInterface";
 import { OAuthAuthorizationController} from './controllers/oAuthAuthorizationController';
-import { OAuthScopeEnum } from './models/oAuthScopeEnum';
+import { OAuthScopeOauth2Enum } from './models/oAuthScopeOauth2Enum';
 
-export class ClientCredentialsAuthManager {
+export class Oauth2Manager {
   private _oAuthClientId: string;
   private _oAuthClientSecret: string;
-  private _oAuthScopes?: OAuthScopeEnum[];
+  private _oAuthScopes?: OAuthScopeOauth2Enum[];
   private _oAuthController: OAuthAuthorizationController;
 
   constructor({
@@ -22,7 +22,7 @@ export class ClientCredentialsAuthManager {
   }:{
     oAuthClientId: string,
     oAuthClientSecret: string,
-    oAuthScopes?: OAuthScopeEnum[],
+    oAuthScopes?: OAuthScopeOauth2Enum[],
   }, client: ClientInterface) {
     this._oAuthClientId = oAuthClientId;
     this._oAuthClientSecret = oAuthClientSecret;
@@ -37,7 +37,7 @@ export class ClientCredentialsAuthManager {
       this._oAuthClientId,
       this._oAuthClientSecret
     );
-    const { result } = await this._oAuthController.requestToken(
+    const { result } = await this._oAuthController.requestTokenOauth2(
       authorization,
       this._oAuthScopes?.join(' '),
       additionalParams

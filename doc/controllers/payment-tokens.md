@@ -3,7 +3,7 @@
 Use the `/vault/payment-tokens` resource to create, retrieve, and delete a payment token that may optionally be associated with a customer.
 
 ```ts
-
+const paymentTokensController = new PaymentTokensController(client);
 ```
 
 ## Class Name
@@ -13,9 +13,9 @@ Use the `/vault/payment-tokens` resource to create, retrieve, and delete a payme
 ## Methods
 
 * [Payment-Tokens Create](../../doc/controllers/payment-tokens.md#payment-tokens-create)
+* [Payment-Tokens Delete](../../doc/controllers/payment-tokens.md#payment-tokens-delete)
 * [Customer Payment-Tokens Get](../../doc/controllers/payment-tokens.md#customer-payment-tokens-get)
 * [Payment-Tokens Get](../../doc/controllers/payment-tokens.md#payment-tokens-get)
-* [Payment-Tokens Delete](../../doc/controllers/payment-tokens.md#payment-tokens-delete)
 
 
 # Payment-Tokens Create
@@ -40,7 +40,9 @@ async paymentTokensCreate(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesVaultPaymentTokensReadwrite`
+### Oauth2_PaymentMethodTokens
+
+`https://uri.paypal.com/services/vault/payment-tokens/readwrite`
 
 ## Response Type
 
@@ -61,8 +63,6 @@ const body: PaymentTokenRequest = {
 };
 
 try {
-  const newClient = await authorize();
-  const paymentTokensController = new PaymentTokensController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await paymentTokensController.paymentTokensCreate(
@@ -133,6 +133,64 @@ try {
 | 500 | An internal server error has occurred. | [`CustomError`](../../doc/models/custom-error.md) |
 
 
+# Payment-Tokens Delete
+
+Delete the payment token associated with the payment token id.
+
+```ts
+async paymentTokensDelete(
+  id: string,
+  requestOptions?: RequestOptions
+): Promise<ApiResponse<void>>
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `id` | `string` | Template, Required | A representation of a vault token. |
+| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
+
+## Requires scope
+
+### Oauth2_PaymentMethodTokens
+
+`https://uri.paypal.com/services/vault/payment-tokens/readwrite`
+
+## Response Type
+
+`void`
+
+## Example Usage
+
+```ts
+const id = 'id0';
+
+try {
+  // @ts-expect-error: unused variables
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { result, ...httpResponse } = await paymentTokensController.paymentTokensDelete(id);
+  // Get more response info...
+  // const { statusCode, headers } = httpResponse;
+} catch (error) {
+  if (error instanceof ApiError) {
+    // @ts-expect-error: unused variables
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const errors = error.result;
+    // const { statusCode, headers } = error;
+  }
+}
+```
+
+## Errors
+
+| HTTP Status Code | Error Description | Exception Class |
+|  --- | --- | --- |
+| 400 | Request is not well-formed, syntactically incorrect, or violates schema. | [`CustomError`](../../doc/models/custom-error.md) |
+| 403 | Authorization failed due to insufficient permissions. | [`CustomError`](../../doc/models/custom-error.md) |
+| 500 | An internal server error has occurred. | [`CustomError`](../../doc/models/custom-error.md) |
+
+
 # Customer Payment-Tokens Get
 
 Returns all payment tokens for a customer.
@@ -159,7 +217,9 @@ async customerPaymentTokensGet(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesVaultPaymentTokensReadwrite`
+### Oauth2_PaymentMethodTokens
+
+`https://uri.paypal.com/services/vault/payment-tokens/readwrite`
 
 ## Response Type
 
@@ -177,8 +237,6 @@ const page = 1;
 const totalRequired = false;
 
 try {
-  const newClient = await authorize();
-  const paymentTokensController = new PaymentTokensController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await paymentTokensController.customerPaymentTokensGet(
@@ -407,7 +465,9 @@ async paymentTokensGet(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesVaultPaymentTokensReadwrite`
+### Oauth2_PaymentMethodTokens
+
+`https://uri.paypal.com/services/vault/payment-tokens/readwrite`
 
 ## Response Type
 
@@ -419,8 +479,6 @@ async paymentTokensGet(
 const id = 'id0';
 
 try {
-  const newClient = await authorize();
-  const paymentTokensController = new PaymentTokensController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await paymentTokensController.paymentTokensGet(id);
@@ -443,63 +501,5 @@ try {
 | 403 | Authorization failed due to insufficient permissions. | [`CustomError`](../../doc/models/custom-error.md) |
 | 404 | The specified resource does not exist. | [`CustomError`](../../doc/models/custom-error.md) |
 | 422 | The requested action could not be performed, semantically incorrect, or failed business validation. | [`CustomError`](../../doc/models/custom-error.md) |
-| 500 | An internal server error has occurred. | [`CustomError`](../../doc/models/custom-error.md) |
-
-
-# Payment-Tokens Delete
-
-Delete the payment token associated with the payment token id.
-
-```ts
-async paymentTokensDelete(
-  id: string,
-  requestOptions?: RequestOptions
-): Promise<ApiResponse<void>>
-```
-
-## Parameters
-
-| Parameter | Type | Tags | Description |
-|  --- | --- | --- | --- |
-| `id` | `string` | Template, Required | A representation of a vault token. |
-| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
-
-## Requires scope
-
-`HttpsUriPaypalComServicesVaultPaymentTokensReadwrite`
-
-## Response Type
-
-`void`
-
-## Example Usage
-
-```ts
-const id = 'id0';
-
-try {
-  const newClient = await authorize();
-  const paymentTokensController = new PaymentTokensController(newClient);
-  // @ts-expect-error: unused variables
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { result, ...httpResponse } = await paymentTokensController.paymentTokensDelete(id);
-  // Get more response info...
-  // const { statusCode, headers } = httpResponse;
-} catch (error) {
-  if (error instanceof ApiError) {
-    // @ts-expect-error: unused variables
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const errors = error.result;
-    // const { statusCode, headers } = error;
-  }
-}
-```
-
-## Errors
-
-| HTTP Status Code | Error Description | Exception Class |
-|  --- | --- | --- |
-| 400 | Request is not well-formed, syntactically incorrect, or violates schema. | [`CustomError`](../../doc/models/custom-error.md) |
-| 403 | Authorization failed due to insufficient permissions. | [`CustomError`](../../doc/models/custom-error.md) |
 | 500 | An internal server error has occurred. | [`CustomError`](../../doc/models/custom-error.md) |
 

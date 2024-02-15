@@ -3,7 +3,7 @@
 Use the `/refunds` resource to show refund details.
 
 ```ts
-
+const refundsController = new RefundsController(client);
 ```
 
 ## Class Name
@@ -31,7 +31,9 @@ async refundsGet(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesPaymentsRefund`
+### Oauth2
+
+`https://uri.paypal.com/services/payments/refund`
 
 ## Response Type
 
@@ -43,8 +45,6 @@ async refundsGet(
 const refundId = 'refund_id4';
 
 try {
-  const newClient = await authorize();
-  const refundsController = new RefundsController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await refundsController.refundsGet(refundId);

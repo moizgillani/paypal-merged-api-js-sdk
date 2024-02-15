@@ -42,6 +42,7 @@ export class SetupTokensController extends BaseController {
     req.throwOn(403, CustomError, 'Authorization failed due to insufficient permissions.');
     req.throwOn(422, CustomError, 'The requested action could not be performed, semantically incorrect, or failed business validation.');
     req.throwOn(500, CustomError, 'An internal server error has occurred.');
+    req.authenticate([{ oauth2PaymentMethodTokens: true }]);
     return req.callAsJson(minimalSetupTokenSchema, requestOptions);
   }
 
@@ -64,6 +65,7 @@ export class SetupTokensController extends BaseController {
     req.throwOn(404, CustomError, 'The specified resource does not exist.');
     req.throwOn(422, CustomError, 'The requested action could not be performed, semantically incorrect, or failed business validation.');
     req.throwOn(500, CustomError, 'An internal server error has occurred.');
+    req.authenticate([{ oauth2PaymentMethodTokens: true }]);
     return req.callAsJson(minimalSetupTokenSchema, requestOptions);
   }
 }

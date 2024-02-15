@@ -9,10 +9,8 @@ The following parameters are configurable for the API Client:
 | `timeout` | `number` | Timeout for API calls.<br>*Default*: `0` |
 | `httpClientOptions` | `Partial<HttpClientOptions>` | Stable configurable http client options. |
 | `unstableHttpClientOptions` | `any` | Unstable configurable http client options. |
-| `oAuthClientId` | `string` | OAuth 2 Client ID |
-| `oAuthClientSecret` | `string` | OAuth 2 Client Secret |
-| `oAuthToken` | `OAuthToken` | Object for storing information about the OAuth token |
-| `oAuthScopes` | `OAuthScopeEnum[]` |  |
+| `oauth2Credentials` | [`Oauth2Credentials`]($a/oauth-2-client-credentials-grant.md) | The credential object for oauth2 |
+| `oauth2PaymentMethodTokensCredentials` | [`Oauth2PaymentMethodTokensCredentials`]($a/oauth-2-client-credentials-grant-1.md) | The credential object for oauth2PaymentMethodTokens |
 
 ## HttpClientOptions
 
@@ -39,25 +37,24 @@ The API client can be initialized as follows:
 
 ```ts
 const client = new Client({
+  oauth2Credentials: {
+    oAuthClientId: 'OAuthClientId',
+    oAuthClientSecret: 'OAuthClientSecret',
+    oAuthScopes: [
+      OAuthScopeOauth2Enum.HttpsUriPaypalComServicesPaymentsPayment,
+      OAuthScopeOauth2Enum.HttpsUriPaypalComServicesPaymentsPaymentReferenceTransaction
+    ]
+  },
+  oauth2PaymentMethodTokensCredentials: {
+    oAuthClientId: 'OAuthClientId',
+    oAuthClientSecret: 'OAuthClientSecret',
+    oAuthScopes: [
+      OAuthScopeOauth2PaymentMethodTokensEnum.HttpsUriPaypalComServicesVaultPaymentTokensReadwrite,
+      OAuthScopeOauth2PaymentMethodTokensEnum.HttpsUriPaypalComServicesVaultPaymentTokensRead
+    ]
+  },
   timeout: 0,
   environment: Environment.Production,
-  oAuthClientId: 'OAuthClientId',
-  oAuthClientSecret: 'OAuthClientSecret',
-  oAuthScopes: [
-    OAuthScopeEnum.HttpsUriPaypalComServicesPaymentsPayment,
-    OAuthScopeEnum.HttpsUriPaypalComServicesPaymentsPaymentReferenceTransaction,
-    OAuthScopeEnum.HttpsUriPaypalComServicesPaymentsInitiatepayment,
-    OAuthScopeEnum.HttpsUriPaypalComServicesPaymentsOrdersClientSideIntegration,
-    OAuthScopeEnum.HttpsUriPaypalComServicesPaymentsPaymentAuthcapture,
-    OAuthScopeEnum.HttpsUriPaypalComServicesPaymentsRefund,
-    OAuthScopeEnum.HttpsUriPaypalComServicesPaymentsNonReferencedCredit,
-    OAuthScopeEnum.HttpsUriPaypalComServicesPaymentsRealtimepayment,
-    OAuthScopeEnum.HttpsUriPaypalComServicesPaymentsReversepayment,
-    OAuthScopeEnum.HttpsUriPaypalComServicesVaultPaymentTokensReadwrite,
-    OAuthScopeEnum.HttpsUriPaypalComServicesVaultPaymentTokensRead,
-    OAuthScopeEnum.HttpsUriPaypalComServicesVaultCustomersRead,
-    OAuthScopeEnum.HttpsUriPaypalComServicesVaultCustomersReadwrite
-  ],
 });
 ```
 

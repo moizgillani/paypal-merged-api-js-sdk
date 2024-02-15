@@ -139,6 +139,7 @@ export class OrdersController extends BaseController {
     req.throwOn(401, UnauthorizedRequestError1Error, 'Authentication failed due to missing authorization header, or invalid authentication credentials.');
     req.throwOn(422, UnprocessableRequestError1Error, 'The requested action could not be performed, semantically incorrect, or failed business validation.');
     req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
     return req.callAsJson(orderSchema, requestOptions);
   }
 
@@ -167,6 +168,7 @@ export class OrdersController extends BaseController {
     req.throwOn(401, UnauthorizedRequestError1Error, 'Authentication failed due to missing authorization header, or invalid authentication credentials.');
     req.throwOn(404, ResourceNotFoundError, 'The specified resource does not exist.');
     req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
     return req.callAsJson(orderSchema, requestOptions);
   }
 
@@ -229,52 +231,8 @@ export class OrdersController extends BaseController {
     req.throwOn(404, OrdersPatchResponse404JsonError, 'The specified resource does not exist.');
     req.throwOn(422, OrdersPatchResponse422JsonError, 'The requested action could not be performed, semantically incorrect, or failed business validation.');
     req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
     return req.call(requestOptions);
-  }
-
-  /**
-   * Payer confirms their intent to pay for the the Order with the given payment source.
-   *
-   * @param id                        The ID of the order for which to update payment
-   *                                                                details.
-   * @param payPalClientMetadataId
-   * @param prefer                    The preferred server response upon successful
-   *                                                                completion of the request. Value is:return=minimal.
-   *                                                                The server returns a minimal response to optimize
-   *                                                                communication between the API caller and the server.
-   *                                                                A minimal response includes the <code>id</code>,
-   *                                                                <code>status</code> and HATEOAS links.
-   *                                                                return=representation. The server returns a
-   *                                                                complete resource representation, including the
-   *                                                                current state of the resource.
-   * @param body
-   * @return Response from the API call
-   */
-  async ordersConfirm(
-    id: string,
-    payPalClientMetadataId?: string,
-    prefer?: string,
-    body?: ConfirmOrderRequest,
-    requestOptions?: RequestOptions
-  ): Promise<ApiResponse<Order>> {
-    const req = this.createRequest('POST');
-    const mapped = req.prepareArgs({
-      id: [id, string()],
-      payPalClientMetadataId: [payPalClientMetadataId, optional(string())],
-      prefer: [prefer, optional(string())],
-      body: [body, optional(confirmOrderRequestSchema)],
-    });
-    req.header('Content-Type', 'application/json');
-    req.header('PayPal-Client-Metadata-Id', mapped.payPalClientMetadataId);
-    req.header('Prefer', mapped.prefer);
-    req.json(mapped.body);
-    req.appendTemplatePath`/v2/checkout/orders/${mapped.id}/confirm-payment-source`;
-    req.throwOn(400, BadRequestError1Error, 'Request is not well-formed, syntactically incorrect, or violates schema.');
-    req.throwOn(403, OrdersConfirmResponse403JsonError, 'Authorization failed due to insufficient permissions.');
-    req.throwOn(422, OrdersConfirmResponse422JsonError, 'The requested action could not be performed, semantically incorrect, or failed business validation.');
-    req.throwOn(500, M500ErrorError, 'An internal server error has occurred.');
-    req.defaultToError(ApiError, 'The default response.');
-    return req.callAsJson(orderSchema, requestOptions);
   }
 
   /**
@@ -339,6 +297,7 @@ export class OrdersController extends BaseController {
     req.throwOn(422, OrdersAuthorizeResponse422JsonError, 'The requested action could not be performed, semantically incorrect, or failed business validation.');
     req.throwOn(500, M500ErrorError, 'An internal server error has occurred.');
     req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
     return req.callAsJson(orderAuthorizeResponseSchema, requestOptions);
   }
 
@@ -403,43 +362,7 @@ export class OrdersController extends BaseController {
     req.throwOn(422, CaptureOrdersUnprocessableRequestError, 'The requested action could not be performed, semantically incorrect, or failed business validation.');
     req.throwOn(500, M500ErrorError, 'An internal server error has occurred.');
     req.defaultToError(ApiError, 'The default response.');
-    return req.callAsJson(orderSchema, requestOptions);
-  }
-
-  /**
-   * Adds tracking information for an Order.
-   *
-   * @param id                    The ID of the order for which to update payment
-   *                                                            details.
-   * @param body
-   * @param payPalAuthAssertion   An API-caller-provided JSON Web Token (JWT) assertion
-   *                                                            that identifies the merchant. For details, see <a
-   *                                                            href="/api/rest/requests/#paypal-auth-assertion">PayPal-
-   *                                                            Auth-Assertion</a>.
-   * @return Response from the API call
-   */
-  async ordersTrackCreate(
-    id: string,
-    body: OrderTrackerRequest,
-    payPalAuthAssertion?: string,
-    requestOptions?: RequestOptions
-  ): Promise<ApiResponse<Order>> {
-    const req = this.createRequest('POST');
-    const mapped = req.prepareArgs({
-      id: [id, string()],
-      body: [body, orderTrackerRequestSchema],
-      payPalAuthAssertion: [payPalAuthAssertion, optional(string())],
-    });
-    req.header('Content-Type', 'application/json');
-    req.header('PayPal-Auth-Assertion', mapped.payPalAuthAssertion);
-    req.json(mapped.body);
-    req.appendTemplatePath`/v2/checkout/orders/${mapped.id}/track`;
-    req.throwOn(400, BadRequestError1Error, 'Request is not well-formed, syntactically incorrect, or violates schema.');
-    req.throwOn(403, OrdersTrackCreateResponse403JsonError, 'Authorization failed due to insufficient permissions.');
-    req.throwOn(404, OrdersTrackCreateResponse404JsonError, 'The specified resource does not exist.');
-    req.throwOn(422, OrdersTrackCreateResponse422JsonError, 'The requested action could not be performed, semantically incorrect, or failed business validation.');
-    req.throwOn(500, M500ErrorError, 'An internal server error has occurred.');
-    req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
     return req.callAsJson(orderSchema, requestOptions);
   }
 
@@ -479,6 +402,91 @@ export class OrdersController extends BaseController {
     req.throwOn(422, OrdersTrackersPatchResponse422JsonError, 'The requested action could not be performed, semantically incorrect, or failed business validation.');
     req.throwOn(500, M500ErrorError, 'An internal server error has occurred.');
     req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
     return req.call(requestOptions);
+  }
+
+  /**
+   * Payer confirms their intent to pay for the the Order with the given payment source.
+   *
+   * @param id                        The ID of the order for which to update payment
+   *                                                                details.
+   * @param payPalClientMetadataId
+   * @param prefer                    The preferred server response upon successful
+   *                                                                completion of the request. Value is:return=minimal.
+   *                                                                The server returns a minimal response to optimize
+   *                                                                communication between the API caller and the server.
+   *                                                                A minimal response includes the <code>id</code>,
+   *                                                                <code>status</code> and HATEOAS links.
+   *                                                                return=representation. The server returns a
+   *                                                                complete resource representation, including the
+   *                                                                current state of the resource.
+   * @param body
+   * @return Response from the API call
+   */
+  async ordersConfirm(
+    id: string,
+    payPalClientMetadataId?: string,
+    prefer?: string,
+    body?: ConfirmOrderRequest,
+    requestOptions?: RequestOptions
+  ): Promise<ApiResponse<Order>> {
+    const req = this.createRequest('POST');
+    const mapped = req.prepareArgs({
+      id: [id, string()],
+      payPalClientMetadataId: [payPalClientMetadataId, optional(string())],
+      prefer: [prefer, optional(string())],
+      body: [body, optional(confirmOrderRequestSchema)],
+    });
+    req.header('Content-Type', 'application/json');
+    req.header('PayPal-Client-Metadata-Id', mapped.payPalClientMetadataId);
+    req.header('Prefer', mapped.prefer);
+    req.json(mapped.body);
+    req.appendTemplatePath`/v2/checkout/orders/${mapped.id}/confirm-payment-source`;
+    req.throwOn(400, BadRequestError1Error, 'Request is not well-formed, syntactically incorrect, or violates schema.');
+    req.throwOn(403, OrdersConfirmResponse403JsonError, 'Authorization failed due to insufficient permissions.');
+    req.throwOn(422, OrdersConfirmResponse422JsonError, 'The requested action could not be performed, semantically incorrect, or failed business validation.');
+    req.throwOn(500, M500ErrorError, 'An internal server error has occurred.');
+    req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
+    return req.callAsJson(orderSchema, requestOptions);
+  }
+
+  /**
+   * Adds tracking information for an Order.
+   *
+   * @param id                    The ID of the order for which to update payment
+   *                                                            details.
+   * @param body
+   * @param payPalAuthAssertion   An API-caller-provided JSON Web Token (JWT) assertion
+   *                                                            that identifies the merchant. For details, see <a
+   *                                                            href="/api/rest/requests/#paypal-auth-assertion">PayPal-
+   *                                                            Auth-Assertion</a>.
+   * @return Response from the API call
+   */
+  async ordersTrackCreate(
+    id: string,
+    body: OrderTrackerRequest,
+    payPalAuthAssertion?: string,
+    requestOptions?: RequestOptions
+  ): Promise<ApiResponse<Order>> {
+    const req = this.createRequest('POST');
+    const mapped = req.prepareArgs({
+      id: [id, string()],
+      body: [body, orderTrackerRequestSchema],
+      payPalAuthAssertion: [payPalAuthAssertion, optional(string())],
+    });
+    req.header('Content-Type', 'application/json');
+    req.header('PayPal-Auth-Assertion', mapped.payPalAuthAssertion);
+    req.json(mapped.body);
+    req.appendTemplatePath`/v2/checkout/orders/${mapped.id}/track`;
+    req.throwOn(400, BadRequestError1Error, 'Request is not well-formed, syntactically incorrect, or violates schema.');
+    req.throwOn(403, OrdersTrackCreateResponse403JsonError, 'Authorization failed due to insufficient permissions.');
+    req.throwOn(404, OrdersTrackCreateResponse404JsonError, 'The specified resource does not exist.');
+    req.throwOn(422, OrdersTrackCreateResponse422JsonError, 'The requested action could not be performed, semantically incorrect, or failed business validation.');
+    req.throwOn(500, M500ErrorError, 'An internal server error has occurred.');
+    req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
+    return req.callAsJson(orderSchema, requestOptions);
   }
 }

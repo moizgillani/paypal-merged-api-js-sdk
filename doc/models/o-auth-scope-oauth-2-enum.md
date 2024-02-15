@@ -1,11 +1,11 @@
 
-# O Auth Scope Enum
+# O Auth Scope Oauth 2 Enum
 
 OAuth 2 scopes supported by the API
 
 ## Enumeration
 
-`OAuthScopeEnum`
+`OAuthScopeOauth2Enum`
 
 ## Fields
 
@@ -20,8 +20,4 @@ OAuth 2 scopes supported by the API
 | `httpsUriPaypalComServicesPaymentsNonReferencedCredit` | Permission to initiate non referenced credit |
 | `httpsUriPaypalComServicesPaymentsRealtimepayment` | Permission to do any real time payment, with support for sale/authorize/order intents |
 | `httpsUriPaypalComServicesPaymentsReversepayment` | Permission to do any reverse payment |
-| `httpsUriPaypalComServicesVaultPaymentTokensReadwrite` | Manage payment instruments |
-| `httpsUriPaypalComServicesVaultPaymentTokensRead` | Permission to only read from vault |
-| `httpsUriPaypalComServicesVaultCustomersRead` | Permission to read customer information. |
-| `httpsUriPaypalComServicesVaultCustomersReadwrite` | Permission to create/update customer information. |
 

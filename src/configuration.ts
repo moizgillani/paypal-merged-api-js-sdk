@@ -5,17 +5,28 @@
  */
 
 import { HttpClientOptions } from './clientAdapter';
-import { OAuthScopeEnum } from './models/oAuthScopeEnum';
+import { OAuthScopeOauth2Enum } from './models/oAuthScopeOauth2Enum';
+import {
+  OAuthScopeOauth2PaymentMethodTokensEnum,
+} from './models/oAuthScopeOauth2PaymentMethodTokensEnum';
 import { OAuthToken } from './models/oAuthToken';
 
 /** An interface for all configuration parameters required by the SDK. */
 export interface Configuration {
   timeout: number;
   environment: Environment;
-  oAuthClientId: string;
-  oAuthClientSecret: string;
-  oAuthToken?: OAuthToken;
-  oAuthScopes?: OAuthScopeEnum[];
+  oauth2Credentials?: {
+    oAuthClientId: string;
+    oAuthClientSecret: string;
+    oAuthToken?: OAuthToken;
+    oAuthScopes?: OAuthScopeOauth2Enum[];
+  };
+  oauth2PaymentMethodTokensCredentials?: {
+    oAuthClientId: string;
+    oAuthClientSecret: string;
+    oAuthToken?: OAuthToken;
+    oAuthScopes?: OAuthScopeOauth2PaymentMethodTokensEnum[];
+  };
   httpClientOptions?: Partial<HttpClientOptions>;
   unstable_httpClientOptions?: any;
 }

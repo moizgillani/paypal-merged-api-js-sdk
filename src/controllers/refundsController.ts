@@ -38,6 +38,7 @@ export class RefundsController extends BaseController {
     req.throwOn(404, RefundsGetResponse404JsonError, 'The request failed because the resource does not exist.');
     req.throwOn(500, ApiError, 'The request failed because an internal server error occurred.');
     req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
     return req.callAsJson(refundPaymentsSchema, requestOptions);
   }
 }

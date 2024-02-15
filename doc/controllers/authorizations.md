@@ -3,7 +3,7 @@
 Use the `/authorizations` resource to show details for, capture payment for, reauthorize, and void authorized payments.
 
 ```ts
-
+const authorizationsController = new AuthorizationsController(client);
 ```
 
 ## Class Name
@@ -13,8 +13,8 @@ Use the `/authorizations` resource to show details for, capture payment for, rea
 ## Methods
 
 * [Authorizations Get](../../doc/controllers/authorizations.md#authorizations-get)
-* [Authorizations Capture](../../doc/controllers/authorizations.md#authorizations-capture)
 * [Authorizations Reauthorize](../../doc/controllers/authorizations.md#authorizations-reauthorize)
+* [Authorizations Capture](../../doc/controllers/authorizations.md#authorizations-capture)
 * [Authorizations Void](../../doc/controllers/authorizations.md#authorizations-void)
 
 
@@ -38,7 +38,9 @@ async authorizationsGet(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesPaymentsPaymentAuthcapture`
+### Oauth2
+
+`https://uri.paypal.com/services/payments/payment/authcapture`
 
 ## Response Type
 
@@ -50,8 +52,6 @@ async authorizationsGet(
 const authorizationId = 'authorization_id8';
 
 try {
-  const newClient = await authorize();
-  const authorizationsController = new AuthorizationsController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await authorizationsController.authorizationsGet(authorizationId);
@@ -74,92 +74,6 @@ try {
 | 401 | Authentication failed due to missing authorization header, or invalid authentication credentials. | [`M401ErrorError`](../../doc/models/m401-error-error.md) |
 | 403 | The request failed because the caller has insufficient permissions. | [`AuthorizationsGetResponse403JsonError`](../../doc/models/authorizations-get-response-403-json-error.md) |
 | 404 | The request failed because the resource does not exist. | [`AuthorizationsGetResponse404JsonError`](../../doc/models/authorizations-get-response-404-json-error.md) |
-| 500 | The request failed because an internal server error occurred. | `ApiError` |
-| Default | The default response. | `ApiError` |
-
-
-# Authorizations Capture
-
-Captures an authorized payment, by ID.
-
-```ts
-async authorizationsCapture(
-  authorizationId: string,
-  payPalRequestId: string,
-  prefer?: string,
-  body?: CaptureRequest,
-  requestOptions?: RequestOptions
-): Promise<ApiResponse<AdditionalCapture>>
-```
-
-## Parameters
-
-| Parameter | Type | Tags | Description |
-|  --- | --- | --- | --- |
-| `authorizationId` | `string` | Template, Required | The PayPal-generated ID for the authorized payment to void. |
-| `payPalRequestId` | `string` | Header, Required | The server stores keys for 45 days. |
-| `prefer` | `string \| undefined` | Header, Optional | The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul> |
-| `body` | [`CaptureRequest \| undefined`](../../doc/models/capture-request.md) | Body, Optional | - |
-| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
-
-## Requires scope
-
-`HttpsUriPaypalComServicesPaymentsPaymentAuthcapture`
-
-## Response Type
-
-[`AdditionalCapture`](../../doc/models/additional-capture.md)
-
-## Example Usage
-
-```ts
-const authorizationId = 'authorization_id8';
-
-const payPalRequestId = 'PayPal-Request-Id6';
-
-const body: CaptureRequest = {
-  invoiceId: 'INVOICE-123',
-  noteToPayer: 'If the ordered color is not available, we will substitute with a different color free of charge.',
-  amount: {
-    currencyCode: 'USD',
-    value: '10.99',
-  },
-  finalCapture: true,
-  softDescriptor: 'Bob\'s Custom Sweaters',
-};
-
-try {
-  const newClient = await authorize();
-  const authorizationsController = new AuthorizationsController(newClient);
-  // @ts-expect-error: unused variables
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { result, ...httpResponse } = await authorizationsController.authorizationsCapture(
-  authorizationId,
-  payPalRequestId,
-  undefined,
-  body
-);
-  // Get more response info...
-  // const { statusCode, headers } = httpResponse;
-} catch (error) {
-  if (error instanceof ApiError) {
-    // @ts-expect-error: unused variables
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const errors = error.result;
-    // const { statusCode, headers } = error;
-  }
-}
-```
-
-## Errors
-
-| HTTP Status Code | Error Description | Exception Class |
-|  --- | --- | --- |
-| 400 | The request failed because it is not well-formed or is syntactically incorrect or violates schema. | [`AuthorizationsCaptureResponse400JsonError`](../../doc/models/authorizations-capture-response-400-json-error.md) |
-| 401 | Authentication failed due to missing authorization header, or invalid authentication credentials. | [`M401ErrorError`](../../doc/models/m401-error-error.md) |
-| 403 | The request failed because the caller has insufficient permissions. | [`AuthorizationsCaptureResponse403JsonError`](../../doc/models/authorizations-capture-response-403-json-error.md) |
-| 404 | The request failed because the resource does not exist. | [`AuthorizationsCaptureResponse404JsonError`](../../doc/models/authorizations-capture-response-404-json-error.md) |
-| 422 | The request failed because it is semantically incorrect or failed business validation. | [`AuthorizationsCaptureResponse422JsonError`](../../doc/models/authorizations-capture-response-422-json-error.md) |
 | 500 | The request failed because an internal server error occurred. | `ApiError` |
 | Default | The default response. | `ApiError` |
 
@@ -190,7 +104,9 @@ async authorizationsReauthorize(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesPaymentsPaymentAuthcapture`
+### Oauth2
+
+`https://uri.paypal.com/services/payments/payment/authcapture`
 
 ## Response Type
 
@@ -211,8 +127,6 @@ const body: ReauthorizeRequest = {
 };
 
 try {
-  const newClient = await authorize();
-  const authorizationsController = new AuthorizationsController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await authorizationsController.authorizationsReauthorize(
@@ -246,6 +160,92 @@ try {
 | Default | The default response. | `ApiError` |
 
 
+# Authorizations Capture
+
+Captures an authorized payment, by ID.
+
+```ts
+async authorizationsCapture(
+  authorizationId: string,
+  payPalRequestId: string,
+  prefer?: string,
+  body?: CaptureRequest,
+  requestOptions?: RequestOptions
+): Promise<ApiResponse<AdditionalCapture>>
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `authorizationId` | `string` | Template, Required | The PayPal-generated ID for the authorized payment to void. |
+| `payPalRequestId` | `string` | Header, Required | The server stores keys for 45 days. |
+| `prefer` | `string \| undefined` | Header, Optional | The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul> |
+| `body` | [`CaptureRequest \| undefined`](../../doc/models/capture-request.md) | Body, Optional | - |
+| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
+
+## Requires scope
+
+### Oauth2
+
+`https://uri.paypal.com/services/payments/payment/authcapture`
+
+## Response Type
+
+[`AdditionalCapture`](../../doc/models/additional-capture.md)
+
+## Example Usage
+
+```ts
+const authorizationId = 'authorization_id8';
+
+const payPalRequestId = 'PayPal-Request-Id6';
+
+const body: CaptureRequest = {
+  invoiceId: 'INVOICE-123',
+  noteToPayer: 'If the ordered color is not available, we will substitute with a different color free of charge.',
+  amount: {
+    currencyCode: 'USD',
+    value: '10.99',
+  },
+  finalCapture: true,
+  softDescriptor: 'Bob\'s Custom Sweaters',
+};
+
+try {
+  // @ts-expect-error: unused variables
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { result, ...httpResponse } = await authorizationsController.authorizationsCapture(
+  authorizationId,
+  payPalRequestId,
+  undefined,
+  body
+);
+  // Get more response info...
+  // const { statusCode, headers } = httpResponse;
+} catch (error) {
+  if (error instanceof ApiError) {
+    // @ts-expect-error: unused variables
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const errors = error.result;
+    // const { statusCode, headers } = error;
+  }
+}
+```
+
+## Errors
+
+| HTTP Status Code | Error Description | Exception Class |
+|  --- | --- | --- |
+| 400 | The request failed because it is not well-formed or is syntactically incorrect or violates schema. | [`AuthorizationsCaptureResponse400JsonError`](../../doc/models/authorizations-capture-response-400-json-error.md) |
+| 401 | Authentication failed due to missing authorization header, or invalid authentication credentials. | [`M401ErrorError`](../../doc/models/m401-error-error.md) |
+| 403 | The request failed because the caller has insufficient permissions. | [`AuthorizationsCaptureResponse403JsonError`](../../doc/models/authorizations-capture-response-403-json-error.md) |
+| 404 | The request failed because the resource does not exist. | [`AuthorizationsCaptureResponse404JsonError`](../../doc/models/authorizations-capture-response-404-json-error.md) |
+| 422 | The request failed because it is semantically incorrect or failed business validation. | [`AuthorizationsCaptureResponse422JsonError`](../../doc/models/authorizations-capture-response-422-json-error.md) |
+| 500 | The request failed because an internal server error occurred. | `ApiError` |
+| Default | The default response. | `ApiError` |
+
+
 # Authorizations Void
 
 Voids, or cancels, an authorized payment, by ID. You cannot void an authorized payment that has been fully captured.
@@ -270,7 +270,9 @@ async authorizationsVoid(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesPaymentsPaymentAuthcapture`
+### Oauth2
+
+`https://uri.paypal.com/services/payments/payment/authcapture`
 
 ## Response Type
 
@@ -284,8 +286,6 @@ const authorizationId = 'authorization_id8';
 const prefer = 'return=minimal';
 
 try {
-  const newClient = await authorize();
-  const authorizationsController = new AuthorizationsController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await authorizationsController.authorizationsVoid(

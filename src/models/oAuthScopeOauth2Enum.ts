@@ -7,9 +7,9 @@
 import { Schema, stringEnum } from '../schema';
 
 /**
- * Enum for OAuthScopeEnum
+ * Enum for OAuthScopeOauth2Enum
  */
-export enum OAuthScopeEnum {
+export enum OAuthScopeOauth2Enum {
   HttpsUriPaypalComServicesPaymentsPayment = 'https://uri.paypal.com/services/payments/payment',
   HttpsUriPaypalComServicesPaymentsPaymentReferenceTransaction = 'https://uri.paypal.com/services/payments/payment/reference-transaction',
   HttpsUriPaypalComServicesPaymentsInitiatepayment = 'https://uri.paypal.com/services/payments/initiatepayment',
@@ -19,13 +19,9 @@ export enum OAuthScopeEnum {
   HttpsUriPaypalComServicesPaymentsNonReferencedCredit = 'https://uri.paypal.com/services/payments/non-referenced-credit',
   HttpsUriPaypalComServicesPaymentsRealtimepayment = 'https://uri.paypal.com/services/payments/realtimepayment',
   HttpsUriPaypalComServicesPaymentsReversepayment = 'https://uri.paypal.com/services/payments/reversepayment',
-  HttpsUriPaypalComServicesVaultPaymentTokensReadwrite = 'https://uri.paypal.com/services/vault/payment-tokens/readwrite',
-  HttpsUriPaypalComServicesVaultPaymentTokensRead = 'https://uri.paypal.com/services/vault/payment-tokens/read',
-  HttpsUriPaypalComServicesVaultCustomersRead = 'https://uri.paypal.com/services/vault/customers/read',
-  HttpsUriPaypalComServicesVaultCustomersReadwrite = 'https://uri.paypal.com/services/vault/customers/readwrite',
 }
 
 /**
- * Schema for OAuthScopeEnum
+ * Schema for OAuthScopeOauth2Enum
  */
-export const oAuthScopeEnumSchema: Schema<OAuthScopeEnum> = stringEnum(OAuthScopeEnum);
+export const oAuthScopeOauth2EnumSchema: Schema<OAuthScopeOauth2Enum> = stringEnum(OAuthScopeOauth2Enum);

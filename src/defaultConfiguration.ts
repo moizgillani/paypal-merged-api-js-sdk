@@ -11,8 +11,6 @@ import { RetryConfiguration } from './core';
 export const DEFAULT_CONFIGURATION: Configuration = {
   timeout: 0,
   environment: Environment.Production,
-  oAuthClientId: 'TODO OAuthClientId',
-  oAuthClientSecret: 'TODO OAuthClientSecret',
 };
 
 /** Default values for retry configuration parameters. */

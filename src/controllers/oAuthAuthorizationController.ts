@@ -18,13 +18,44 @@ export class OAuthAuthorizationController extends BaseController {
    * @param scope         Requested scopes as a space-delimited list.
    * @return Response from the API call
    */
-  async requestToken(
+  async requestTokenOauth2(
     authorization: string,
     scope?: string,
     fieldParameters?: Record<string, unknown>,
     requestOptions?: RequestOptions
   ): Promise<ApiResponse<OAuthToken>> {
     const req = this.createRequest('POST', '/v1/oauth2/token');
+    const mapped = req.prepareArgs({
+      authorization: [authorization, string()],
+      scope: [scope, optional(string())],
+    });
+    req.header('Authorization', mapped.authorization);
+    req.form({
+      grant_type: 'client_credentials',
+      scope: mapped.scope,
+      ...fieldParameters
+    });
+    req.throwOn(400, OAuthProviderError, 'OAuth 2 provider returned an error.');
+    req.throwOn(401, OAuthProviderError, 'OAuth 2 provider says client authentication failed.');
+    req.authenticate(false);
+    return req.callAsJson(oAuthTokenSchema, requestOptions);
+  }
+
+  /**
+   * Create a new OAuth 2 token.
+   *
+   * @param authorization Authorization header in Basic auth format
+   * @param scope         Requested scopes as a space-delimited list.
+   * @return Response from the API call
+   */
+  async requestTokenOauth2PaymentMethodTokens(
+    authorization: string,
+    scope?: string,
+    fieldParameters?: Record<string, unknown>,
+    requestOptions?: RequestOptions
+  ): Promise<ApiResponse<OAuthToken>> {
+    const req = this.createRequest('POST', '/v1/oauth2/token');
+    req.baseUrl('default_Payment Method Tokens');
     const mapped = req.prepareArgs({
       authorization: [authorization, string()],
       scope: [scope, optional(string())],

@@ -42,27 +42,6 @@ import { BaseController } from './baseController';
 
 export class CapturesController extends BaseController {
   /**
-   * Shows details for a captured payment, by ID.
-   *
-   * @param captureId  The PayPal-generated ID for the captured payment to refund.
-   * @return Response from the API call
-   */
-  async capturesGet(
-    captureId: string,
-    requestOptions?: RequestOptions
-  ): Promise<ApiResponse<AdditionalCapture>> {
-    const req = this.createRequest('GET');
-    const mapped = req.prepareArgs({ captureId: [captureId, string()] });
-    req.appendTemplatePath`/v2/payments/captures/${mapped.captureId}`;
-    req.throwOn(401, M401ErrorError, 'Authentication failed due to missing authorization header, or invalid authentication credentials.');
-    req.throwOn(403, CapturesGetResponse403JsonError, 'The request failed because the caller has insufficient permissions.');
-    req.throwOn(404, CapturesGetResponse404JsonError, 'The request failed because the resource does not exist.');
-    req.throwOn(500, ApiError, 'The request failed because an internal server error occurred.');
-    req.defaultToError(ApiError, 'The default response.');
-    return req.callAsJson(additionalCaptureSchema, requestOptions);
-  }
-
-  /**
    * Refunds a captured payment, by ID. For a full refund, include an empty payload in the JSON request
    * body. For a partial refund, include an <code>amount</code> object in the JSON request body.
    *
@@ -118,6 +97,29 @@ export class CapturesController extends BaseController {
     req.throwOn(422, CapturesRefundResponse422JsonError, 'The request failed because it either is semantically incorrect or failed business validation.');
     req.throwOn(500, ApiError, 'The request failed because an internal server error occurred.');
     req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
     return req.callAsJson(refundPaymentsSchema, requestOptions);
+  }
+
+  /**
+   * Shows details for a captured payment, by ID.
+   *
+   * @param captureId  The PayPal-generated ID for the captured payment to refund.
+   * @return Response from the API call
+   */
+  async capturesGet(
+    captureId: string,
+    requestOptions?: RequestOptions
+  ): Promise<ApiResponse<AdditionalCapture>> {
+    const req = this.createRequest('GET');
+    const mapped = req.prepareArgs({ captureId: [captureId, string()] });
+    req.appendTemplatePath`/v2/payments/captures/${mapped.captureId}`;
+    req.throwOn(401, M401ErrorError, 'Authentication failed due to missing authorization header, or invalid authentication credentials.');
+    req.throwOn(403, CapturesGetResponse403JsonError, 'The request failed because the caller has insufficient permissions.');
+    req.throwOn(404, CapturesGetResponse404JsonError, 'The request failed because the resource does not exist.');
+    req.throwOn(500, ApiError, 'The request failed because an internal server error occurred.');
+    req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
+    return req.callAsJson(additionalCaptureSchema, requestOptions);
   }
 }

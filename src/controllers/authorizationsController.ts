@@ -90,52 +90,8 @@ export class AuthorizationsController extends BaseController {
     req.throwOn(404, AuthorizationsGetResponse404JsonError, 'The request failed because the resource does not exist.');
     req.throwOn(500, ApiError, 'The request failed because an internal server error occurred.');
     req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
     return req.callAsJson(additionalAuthorizationSchema, requestOptions);
-  }
-
-  /**
-   * Captures an authorized payment, by ID.
-   *
-   * @param authorizationId   The PayPal-generated ID for the authorized payment to void.
-   * @param payPalRequestId   The server stores keys for 45 days.
-   * @param prefer            The preferred server response upon successful completion of the
-   *                                                   request. Value is:<ul><li><code>return=minimal</code>. The
-   *                                                   server returns a minimal response to optimize communication
-   *                                                   between the API caller and the server. A minimal response
-   *                                                   includes the <code>id</code>, <code>status</code> and HATEOAS
-   *                                                   links.</li><li><code>return=representation</code>. The server
-   *                                                   returns a complete resource representation, including the
-   *                                                   current state of the resource.</li></ul>
-   * @param body
-   * @return Response from the API call
-   */
-  async authorizationsCapture(
-    authorizationId: string,
-    payPalRequestId: string,
-    prefer?: string,
-    body?: CaptureRequest,
-    requestOptions?: RequestOptions
-  ): Promise<ApiResponse<AdditionalCapture>> {
-    const req = this.createRequest('POST');
-    const mapped = req.prepareArgs({
-      authorizationId: [authorizationId, string()],
-      payPalRequestId: [payPalRequestId, string()],
-      prefer: [prefer, optional(string())],
-      body: [body, optional(captureRequestSchema)],
-    });
-    req.header('PayPal-Request-Id', mapped.payPalRequestId);
-    req.header('Content-Type', 'application/json');
-    req.header('Prefer', mapped.prefer);
-    req.json(mapped.body);
-    req.appendTemplatePath`/v2/payments/authorizations/${mapped.authorizationId}/capture`;
-    req.throwOn(400, AuthorizationsCaptureResponse400JsonError, 'The request failed because it is not well-formed or is syntactically incorrect or violates schema.');
-    req.throwOn(401, M401ErrorError, 'Authentication failed due to missing authorization header, or invalid authentication credentials.');
-    req.throwOn(403, AuthorizationsCaptureResponse403JsonError, 'The request failed because the caller has insufficient permissions.');
-    req.throwOn(404, AuthorizationsCaptureResponse404JsonError, 'The request failed because the resource does not exist.');
-    req.throwOn(422, AuthorizationsCaptureResponse422JsonError, 'The request failed because it is semantically incorrect or failed business validation.');
-    req.throwOn(500, ApiError, 'The request failed because an internal server error occurred.');
-    req.defaultToError(ApiError, 'The default response.');
-    return req.callAsJson(additionalCaptureSchema, requestOptions);
   }
 
   /**
@@ -189,7 +145,54 @@ export class AuthorizationsController extends BaseController {
     req.throwOn(422, AuthorizationsReauthorizeResponse422JsonError, 'The request failed because it either is semantically incorrect or failed business validation.');
     req.throwOn(500, ApiError, 'The request failed because an internal server error occurred.');
     req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
     return req.callAsJson(additionalAuthorizationSchema, requestOptions);
+  }
+
+  /**
+   * Captures an authorized payment, by ID.
+   *
+   * @param authorizationId   The PayPal-generated ID for the authorized payment to void.
+   * @param payPalRequestId   The server stores keys for 45 days.
+   * @param prefer            The preferred server response upon successful completion of the
+   *                                                   request. Value is:<ul><li><code>return=minimal</code>. The
+   *                                                   server returns a minimal response to optimize communication
+   *                                                   between the API caller and the server. A minimal response
+   *                                                   includes the <code>id</code>, <code>status</code> and HATEOAS
+   *                                                   links.</li><li><code>return=representation</code>. The server
+   *                                                   returns a complete resource representation, including the
+   *                                                   current state of the resource.</li></ul>
+   * @param body
+   * @return Response from the API call
+   */
+  async authorizationsCapture(
+    authorizationId: string,
+    payPalRequestId: string,
+    prefer?: string,
+    body?: CaptureRequest,
+    requestOptions?: RequestOptions
+  ): Promise<ApiResponse<AdditionalCapture>> {
+    const req = this.createRequest('POST');
+    const mapped = req.prepareArgs({
+      authorizationId: [authorizationId, string()],
+      payPalRequestId: [payPalRequestId, string()],
+      prefer: [prefer, optional(string())],
+      body: [body, optional(captureRequestSchema)],
+    });
+    req.header('PayPal-Request-Id', mapped.payPalRequestId);
+    req.header('Content-Type', 'application/json');
+    req.header('Prefer', mapped.prefer);
+    req.json(mapped.body);
+    req.appendTemplatePath`/v2/payments/authorizations/${mapped.authorizationId}/capture`;
+    req.throwOn(400, AuthorizationsCaptureResponse400JsonError, 'The request failed because it is not well-formed or is syntactically incorrect or violates schema.');
+    req.throwOn(401, M401ErrorError, 'Authentication failed due to missing authorization header, or invalid authentication credentials.');
+    req.throwOn(403, AuthorizationsCaptureResponse403JsonError, 'The request failed because the caller has insufficient permissions.');
+    req.throwOn(404, AuthorizationsCaptureResponse404JsonError, 'The request failed because the resource does not exist.');
+    req.throwOn(422, AuthorizationsCaptureResponse422JsonError, 'The request failed because it is semantically incorrect or failed business validation.');
+    req.throwOn(500, ApiError, 'The request failed because an internal server error occurred.');
+    req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
+    return req.callAsJson(additionalCaptureSchema, requestOptions);
   }
 
   /**
@@ -236,6 +239,7 @@ export class AuthorizationsController extends BaseController {
     req.throwOn(422, AuthorizationsVoidResponse422JsonError, 'The request failed because it either is semantically incorrect or failed business validation.');
     req.throwOn(500, ApiError, 'The request failed because an internal server error occurred.');
     req.defaultToError(ApiError, 'The default response.');
+    req.authenticate([{ oauth2: true }]);
     return req.callAsJson(additionalAuthorizationSchema, requestOptions);
   }
 }

@@ -16,7 +16,8 @@ export {
   ResponseValidationError,
 } from './core';
 export * from './defaultConfiguration';
-export * from './clientCredentialsAuthManager';
+export * from './oauth2Manager';
+export * from './oauth2PaymentMethodTokensManager';
 export * from './controllers/authorizationsController';
 export * from './controllers/capturesController';
 export * from './controllers/oAuthAuthorizationController';
@@ -944,7 +945,8 @@ export type { NOTSUPPORTED } from './models/nOTSUPPORTED';
 export { NotSupportedDescriptionEnum } from './models/notSupportedDescriptionEnum';
 export { NotSupportedIssueEnum } from './models/notSupportedIssueEnum';
 export { OAuthProviderErrorEnum } from './models/oAuthProviderErrorEnum';
-export { OAuthScopeEnum } from './models/oAuthScopeEnum';
+export { OAuthScopeOauth2Enum } from './models/oAuthScopeOauth2Enum';
+export { OAuthScopeOauth2PaymentMethodTokensEnum } from './models/oAuthScopeOauth2PaymentMethodTokensEnum';
 export type { OAuthToken } from './models/oAuthToken';
 export { OneClickFirstTransactionParamsEnum } from './models/oneClickFirstTransactionParamsEnum';
 export type { ONEOFPARAMETERSREQUIRED } from './models/oNEOFPARAMETERSREQUIRED';

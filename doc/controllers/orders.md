@@ -3,7 +3,7 @@
 Use the `/orders` resource to create, update, retrieve, authorize, capture and track orders.
 
 ```ts
-
+const ordersController = new OrdersController(client);
 ```
 
 ## Class Name
@@ -15,11 +15,11 @@ Use the `/orders` resource to create, update, retrieve, authorize, capture and t
 * [Create Order](../../doc/controllers/orders.md#create-order)
 * [Get Order](../../doc/controllers/orders.md#get-order)
 * [Orders Patch](../../doc/controllers/orders.md#orders-patch)
-* [Orders Confirm](../../doc/controllers/orders.md#orders-confirm)
 * [Orders Authorize](../../doc/controllers/orders.md#orders-authorize)
 * [Capture Order](../../doc/controllers/orders.md#capture-order)
-* [Orders Track Create](../../doc/controllers/orders.md#orders-track-create)
 * [Orders Trackers Patch](../../doc/controllers/orders.md#orders-trackers-patch)
+* [Orders Confirm](../../doc/controllers/orders.md#orders-confirm)
+* [Orders Track Create](../../doc/controllers/orders.md#orders-track-create)
 
 
 # Create Order
@@ -50,7 +50,9 @@ async createOrder(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesPaymentsPayment`, `HttpsUriPaypalComServicesPaymentsOrdersClientSideIntegration`
+### Oauth2
+
+`https://uri.paypal.com/services/payments/orders/client-side-integration`, `https://uri.paypal.com/services/payments/payment`
 
 ## Response Type
 
@@ -88,8 +90,6 @@ const body: OrderRequest = {
 };
 
 try {
-  const newClient = await authorize();
-  const ordersController = new OrdersController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await ordersController.createOrder(
@@ -164,7 +164,9 @@ async getOrder(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesPaymentsPayment`, `HttpsUriPaypalComServicesPaymentsOrdersClientSideIntegration`
+### Oauth2
+
+`https://uri.paypal.com/services/payments/orders/client-side-integration`, `https://uri.paypal.com/services/payments/payment`
 
 ## Response Type
 
@@ -176,8 +178,6 @@ async getOrder(
 const id = 'id0';
 
 try {
-  const newClient = await authorize();
-  const ordersController = new OrdersController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await ordersController.getOrder(id);
@@ -284,7 +284,9 @@ async ordersPatch(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesPaymentsPayment`, `HttpsUriPaypalComServicesPaymentsOrdersClientSideIntegration`
+### Oauth2
+
+`https://uri.paypal.com/services/payments/orders/client-side-integration`, `https://uri.paypal.com/services/payments/payment`
 
 ## Response Type
 
@@ -304,8 +306,6 @@ const body: Patch[] = [
 ];
 
 try {
-  const newClient = await authorize();
-  const ordersController = new OrdersController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await ordersController.ordersPatch(
@@ -332,99 +332,6 @@ try {
 | 401 | Authentication failed due to missing authorization header, or invalid authentication credentials. | [`UnauthorizedRequestError1Error`](../../doc/models/unauthorized-request-error-1-error.md) |
 | 404 | The specified resource does not exist. | [`OrdersPatchResponse404JsonError`](../../doc/models/orders-patch-response-404-json-error.md) |
 | 422 | The requested action could not be performed, semantically incorrect, or failed business validation. | [`OrdersPatchResponse422JsonError`](../../doc/models/orders-patch-response-422-json-error.md) |
-| Default | The default response. | `ApiError` |
-
-
-# Orders Confirm
-
-Payer confirms their intent to pay for the the Order with the given payment source.
-
-```ts
-async ordersConfirm(
-  id: string,
-  payPalClientMetadataId?: string,
-  prefer?: string,
-  body?: ConfirmOrderRequest,
-  requestOptions?: RequestOptions
-): Promise<ApiResponse<Order>>
-```
-
-## Parameters
-
-| Parameter | Type | Tags | Description |
-|  --- | --- | --- | --- |
-| `id` | `string` | Template, Required | The ID of the order for which to update payment details. |
-| `payPalClientMetadataId` | `string \| undefined` | Header, Optional | - |
-| `prefer` | `string \| undefined` | Header, Optional | The preferred server response upon successful completion of the request. Value is:return=minimal. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links. return=representation. The server returns a complete resource representation, including the current state of the resource. |
-| `body` | [`ConfirmOrderRequest \| undefined`](../../doc/models/confirm-order-request.md) | Body, Optional | - |
-| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
-
-## Requires scope
-
-`HttpsUriPaypalComServicesPaymentsPayment`, `HttpsUriPaypalComServicesPaymentsInitiatepayment`
-
-## Response Type
-
-[`Order`](../../doc/models/order.md)
-
-## Example Usage
-
-```ts
-const id = 'id0';
-
-const body: ConfirmOrderRequest = {
-  paymentSource: {
-    paypal: {
-      emailAddress: 'customer@example.com',
-      name: {
-        givenName: 'John',
-        surname: 'Doe',
-      },
-      experienceContext: {
-        brandName: 'EXAMPLE INC',
-        locale: 'en-US',
-        shippingPreference: ShippingPreferenceEnum.SETPROVIDEDADDRESS,
-        returnUrl: 'https://example.com/returnUrl',
-        cancelUrl: 'https://example.com/cancelUrl',
-        landingPage: LandingPageTypeEnum.LOGIN,
-        userAction: UserActionEnum.PAYNOW,
-        paymentMethodPreference: MerchantPreferredPaymentMethodsEnum.IMMEDIATEPAYMENTREQUIRED,
-      },
-    },
-  },
-};
-
-try {
-  const newClient = await authorize();
-  const ordersController = new OrdersController(newClient);
-  // @ts-expect-error: unused variables
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { result, ...httpResponse } = await ordersController.ordersConfirm(
-  id,
-  undefined,
-  undefined,
-  body
-);
-  // Get more response info...
-  // const { statusCode, headers } = httpResponse;
-} catch (error) {
-  if (error instanceof ApiError) {
-    // @ts-expect-error: unused variables
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const errors = error.result;
-    // const { statusCode, headers } = error;
-  }
-}
-```
-
-## Errors
-
-| HTTP Status Code | Error Description | Exception Class |
-|  --- | --- | --- |
-| 400 | Request is not well-formed, syntactically incorrect, or violates schema. | [`BadRequestError1Error`](../../doc/models/bad-request-error-1-error.md) |
-| 403 | Authorization failed due to insufficient permissions. | [`OrdersConfirmResponse403JsonError`](../../doc/models/orders-confirm-response-403-json-error.md) |
-| 422 | The requested action could not be performed, semantically incorrect, or failed business validation. | [`OrdersConfirmResponse422JsonError`](../../doc/models/orders-confirm-response-422-json-error.md) |
-| 500 | An internal server error has occurred. | [`M500ErrorError`](../../doc/models/m500-error-error.md) |
 | Default | The default response. | `ApiError` |
 
 
@@ -458,7 +365,9 @@ async ordersAuthorize(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesPaymentsPayment`, `HttpsUriPaypalComServicesPaymentsOrdersClientSideIntegration`
+### Oauth2
+
+`https://uri.paypal.com/services/payments/orders/client-side-integration`, `https://uri.paypal.com/services/payments/payment`
 
 ## Response Type
 
@@ -474,8 +383,6 @@ const payPalRequestId = '7b92603e-77ed-4896-8e78-5dea2050476a';
 const prefer = 'return=minimal';
 
 try {
-  const newClient = await authorize();
-  const ordersController = new OrdersController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await ordersController.ordersAuthorize(
@@ -538,7 +445,9 @@ async captureOrder(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesPaymentsPayment`, `HttpsUriPaypalComServicesPaymentsOrdersClientSideIntegration`
+### Oauth2
+
+`https://uri.paypal.com/services/payments/orders/client-side-integration`, `https://uri.paypal.com/services/payments/payment`
 
 ## Response Type
 
@@ -554,8 +463,6 @@ const payPalRequestId = '7b92603e-77ed-4896-8e78-5dea2050476a';
 const prefer = 'return=minimal';
 
 try {
-  const newClient = await authorize();
-  const ordersController = new OrdersController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await ordersController.captureOrder(
@@ -588,82 +495,6 @@ try {
 | Default | The default response. | `ApiError` |
 
 
-# Orders Track Create
-
-Adds tracking information for an Order.
-
-```ts
-async ordersTrackCreate(
-  id: string,
-  body: OrderTrackerRequest,
-  payPalAuthAssertion?: string,
-  requestOptions?: RequestOptions
-): Promise<ApiResponse<Order>>
-```
-
-## Parameters
-
-| Parameter | Type | Tags | Description |
-|  --- | --- | --- | --- |
-| `id` | `string` | Template, Required | The ID of the order for which to update payment details. |
-| `body` | [`OrderTrackerRequest`](../../doc/models/order-tracker-request.md) | Body, Required | - |
-| `payPalAuthAssertion` | `string \| undefined` | Header, Optional | An API-caller-provided JSON Web Token (JWT) assertion that identifies the merchant. For details, see <a href="/api/rest/requests/#paypal-auth-assertion">PayPal-Auth-Assertion</a>. |
-| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
-
-## Requires scope
-
-`HttpsUriPaypalComServicesPaymentsPayment`
-
-## Response Type
-
-[`Order`](../../doc/models/order.md)
-
-## Example Usage
-
-```ts
-const id = 'id0';
-
-const body: OrderTrackerRequest = {
-  transactionId: 'transaction_id4',
-  status: ShipmentTrackingStatusEnum.SHIPPED,
-  captureId: 'capture_id8',
-  notifyBuyer: false,
-  notifyPayer: false,
-};
-
-try {
-  const newClient = await authorize();
-  const ordersController = new OrdersController(newClient);
-  // @ts-expect-error: unused variables
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { result, ...httpResponse } = await ordersController.ordersTrackCreate(
-  id,
-  body
-);
-  // Get more response info...
-  // const { statusCode, headers } = httpResponse;
-} catch (error) {
-  if (error instanceof ApiError) {
-    // @ts-expect-error: unused variables
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const errors = error.result;
-    // const { statusCode, headers } = error;
-  }
-}
-```
-
-## Errors
-
-| HTTP Status Code | Error Description | Exception Class |
-|  --- | --- | --- |
-| 400 | Request is not well-formed, syntactically incorrect, or violates schema. | [`BadRequestError1Error`](../../doc/models/bad-request-error-1-error.md) |
-| 403 | Authorization failed due to insufficient permissions. | [`OrdersTrackCreateResponse403JsonError`](../../doc/models/orders-track-create-response-403-json-error.md) |
-| 404 | The specified resource does not exist. | [`OrdersTrackCreateResponse404JsonError`](../../doc/models/orders-track-create-response-404-json-error.md) |
-| 422 | The requested action could not be performed, semantically incorrect, or failed business validation. | [`OrdersTrackCreateResponse422JsonError`](../../doc/models/orders-track-create-response-422-json-error.md) |
-| 500 | An internal server error has occurred. | [`M500ErrorError`](../../doc/models/m500-error-error.md) |
-| Default | The default response. | `ApiError` |
-
-
 # Orders Trackers Patch
 
 Updates or cancels the tracking information for a PayPal order, by ID. Updatable attributes or objects:<br/><br/><table><thead><th>Attribute</th><th>Op</th><th>Notes</th></thead><tbody></tr><tr><td><code>items</code></td><td>replace</td><td>Using replace op for <code>items</code> will replace the entire <code>items</code> object with the value sent in request.</td></tr><tr><td><code>notify_payer</code></td><td>replace, add</td><td></td></tr><tr><td><code>status</code></td><td>replace</td><td>Only patching status to CANCELLED is currently supported.</td></tr></tbody></table>
@@ -688,7 +519,9 @@ async ordersTrackersPatch(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesPaymentsPayment`
+### Oauth2
+
+`https://uri.paypal.com/services/payments/payment`
 
 ## Response Type
 
@@ -710,8 +543,6 @@ const body: Patch[] = [
 ];
 
 try {
-  const newClient = await authorize();
-  const ordersController = new OrdersController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await ordersController.ordersTrackersPatch(
@@ -739,6 +570,175 @@ try {
 | 403 | Authorization failed due to insufficient permissions. | [`OrdersTrackersPatchResponse403JsonError`](../../doc/models/orders-trackers-patch-response-403-json-error.md) |
 | 404 | The specified resource does not exist. | [`OrdersTrackersPatchResponse404JsonError`](../../doc/models/orders-trackers-patch-response-404-json-error.md) |
 | 422 | The requested action could not be performed, semantically incorrect, or failed business validation. | [`OrdersTrackersPatchResponse422JsonError`](../../doc/models/orders-trackers-patch-response-422-json-error.md) |
+| 500 | An internal server error has occurred. | [`M500ErrorError`](../../doc/models/m500-error-error.md) |
+| Default | The default response. | `ApiError` |
+
+
+# Orders Confirm
+
+Payer confirms their intent to pay for the the Order with the given payment source.
+
+```ts
+async ordersConfirm(
+  id: string,
+  payPalClientMetadataId?: string,
+  prefer?: string,
+  body?: ConfirmOrderRequest,
+  requestOptions?: RequestOptions
+): Promise<ApiResponse<Order>>
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `id` | `string` | Template, Required | The ID of the order for which to update payment details. |
+| `payPalClientMetadataId` | `string \| undefined` | Header, Optional | - |
+| `prefer` | `string \| undefined` | Header, Optional | The preferred server response upon successful completion of the request. Value is:return=minimal. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links. return=representation. The server returns a complete resource representation, including the current state of the resource. |
+| `body` | [`ConfirmOrderRequest \| undefined`](../../doc/models/confirm-order-request.md) | Body, Optional | - |
+| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
+
+## Requires scope
+
+### Oauth2
+
+`https://uri.paypal.com/services/payments/initiatepayment`, `https://uri.paypal.com/services/payments/payment`
+
+## Response Type
+
+[`Order`](../../doc/models/order.md)
+
+## Example Usage
+
+```ts
+const id = 'id0';
+
+const body: ConfirmOrderRequest = {
+  paymentSource: {
+    paypal: {
+      emailAddress: 'customer@example.com',
+      name: {
+        givenName: 'John',
+        surname: 'Doe',
+      },
+      experienceContext: {
+        brandName: 'EXAMPLE INC',
+        locale: 'en-US',
+        shippingPreference: ShippingPreferenceEnum.SETPROVIDEDADDRESS,
+        returnUrl: 'https://example.com/returnUrl',
+        cancelUrl: 'https://example.com/cancelUrl',
+        landingPage: LandingPageTypeEnum.LOGIN,
+        userAction: UserActionEnum.PAYNOW,
+        paymentMethodPreference: MerchantPreferredPaymentMethodsEnum.IMMEDIATEPAYMENTREQUIRED,
+      },
+    },
+  },
+};
+
+try {
+  // @ts-expect-error: unused variables
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { result, ...httpResponse } = await ordersController.ordersConfirm(
+  id,
+  undefined,
+  undefined,
+  body
+);
+  // Get more response info...
+  // const { statusCode, headers } = httpResponse;
+} catch (error) {
+  if (error instanceof ApiError) {
+    // @ts-expect-error: unused variables
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const errors = error.result;
+    // const { statusCode, headers } = error;
+  }
+}
+```
+
+## Errors
+
+| HTTP Status Code | Error Description | Exception Class |
+|  --- | --- | --- |
+| 400 | Request is not well-formed, syntactically incorrect, or violates schema. | [`BadRequestError1Error`](../../doc/models/bad-request-error-1-error.md) |
+| 403 | Authorization failed due to insufficient permissions. | [`OrdersConfirmResponse403JsonError`](../../doc/models/orders-confirm-response-403-json-error.md) |
+| 422 | The requested action could not be performed, semantically incorrect, or failed business validation. | [`OrdersConfirmResponse422JsonError`](../../doc/models/orders-confirm-response-422-json-error.md) |
+| 500 | An internal server error has occurred. | [`M500ErrorError`](../../doc/models/m500-error-error.md) |
+| Default | The default response. | `ApiError` |
+
+
+# Orders Track Create
+
+Adds tracking information for an Order.
+
+```ts
+async ordersTrackCreate(
+  id: string,
+  body: OrderTrackerRequest,
+  payPalAuthAssertion?: string,
+  requestOptions?: RequestOptions
+): Promise<ApiResponse<Order>>
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `id` | `string` | Template, Required | The ID of the order for which to update payment details. |
+| `body` | [`OrderTrackerRequest`](../../doc/models/order-tracker-request.md) | Body, Required | - |
+| `payPalAuthAssertion` | `string \| undefined` | Header, Optional | An API-caller-provided JSON Web Token (JWT) assertion that identifies the merchant. For details, see <a href="/api/rest/requests/#paypal-auth-assertion">PayPal-Auth-Assertion</a>. |
+| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
+
+## Requires scope
+
+### Oauth2
+
+`https://uri.paypal.com/services/payments/payment`
+
+## Response Type
+
+[`Order`](../../doc/models/order.md)
+
+## Example Usage
+
+```ts
+const id = 'id0';
+
+const body: OrderTrackerRequest = {
+  transactionId: 'transaction_id4',
+  status: ShipmentTrackingStatusEnum.SHIPPED,
+  captureId: 'capture_id8',
+  notifyBuyer: false,
+  notifyPayer: false,
+};
+
+try {
+  // @ts-expect-error: unused variables
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { result, ...httpResponse } = await ordersController.ordersTrackCreate(
+  id,
+  body
+);
+  // Get more response info...
+  // const { statusCode, headers } = httpResponse;
+} catch (error) {
+  if (error instanceof ApiError) {
+    // @ts-expect-error: unused variables
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const errors = error.result;
+    // const { statusCode, headers } = error;
+  }
+}
+```
+
+## Errors
+
+| HTTP Status Code | Error Description | Exception Class |
+|  --- | --- | --- |
+| 400 | Request is not well-formed, syntactically incorrect, or violates schema. | [`BadRequestError1Error`](../../doc/models/bad-request-error-1-error.md) |
+| 403 | Authorization failed due to insufficient permissions. | [`OrdersTrackCreateResponse403JsonError`](../../doc/models/orders-track-create-response-403-json-error.md) |
+| 404 | The specified resource does not exist. | [`OrdersTrackCreateResponse404JsonError`](../../doc/models/orders-track-create-response-404-json-error.md) |
+| 422 | The requested action could not be performed, semantically incorrect, or failed business validation. | [`OrdersTrackCreateResponse422JsonError`](../../doc/models/orders-track-create-response-422-json-error.md) |
 | 500 | An internal server error has occurred. | [`M500ErrorError`](../../doc/models/m500-error-error.md) |
 | Default | The default response. | `ApiError` |
 

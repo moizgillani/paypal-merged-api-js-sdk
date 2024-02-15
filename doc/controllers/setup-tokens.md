@@ -3,7 +3,7 @@
 Use the `/vault/setup-tokens` resource to create and retrieve temporary vault payment methods.
 
 ```ts
-
+const setupTokensController = new SetupTokensController(client);
 ```
 
 ## Class Name
@@ -38,7 +38,9 @@ async setupTokensCreate(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesVaultPaymentTokensRead`
+### Oauth2_PaymentMethodTokens
+
+`https://uri.paypal.com/services/vault/payment-tokens/read`
 
 ## Response Type
 
@@ -74,8 +76,6 @@ const body: SetupToken = {
 };
 
 try {
-  const newClient = await authorize();
-  const setupTokensController = new SetupTokensController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await setupTokensController.setupTokensCreate(
@@ -165,7 +165,9 @@ async setupTokensGet(
 
 ## Requires scope
 
-`HttpsUriPaypalComServicesVaultPaymentTokensRead`
+### Oauth2_PaymentMethodTokens
+
+`https://uri.paypal.com/services/vault/payment-tokens/read`
 
 ## Response Type
 
@@ -177,8 +179,6 @@ async setupTokensGet(
 const id = 'id0';
 
 try {
-  const newClient = await authorize();
-  const setupTokensController = new SetupTokensController(newClient);
   // @ts-expect-error: unused variables
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { result, ...httpResponse } = await setupTokensController.setupTokensGet(id);
