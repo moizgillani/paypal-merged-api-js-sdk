@@ -13,8 +13,8 @@ const authorizationsController = new AuthorizationsController(client);
 ## Methods
 
 * [Authorizations Get](../../doc/controllers/authorizations.md#authorizations-get)
-* [Authorizations Reauthorize](../../doc/controllers/authorizations.md#authorizations-reauthorize)
 * [Authorizations Capture](../../doc/controllers/authorizations.md#authorizations-capture)
+* [Authorizations Reauthorize](../../doc/controllers/authorizations.md#authorizations-reauthorize)
 * [Authorizations Void](../../doc/controllers/authorizations.md#authorizations-void)
 
 
@@ -74,88 +74,6 @@ try {
 | 401 | Authentication failed due to missing authorization header, or invalid authentication credentials. | [`M401ErrorError`](../../doc/models/m401-error-error.md) |
 | 403 | The request failed because the caller has insufficient permissions. | [`AuthorizationsGetResponse403JsonError`](../../doc/models/authorizations-get-response-403-json-error.md) |
 | 404 | The request failed because the resource does not exist. | [`AuthorizationsGetResponse404JsonError`](../../doc/models/authorizations-get-response-404-json-error.md) |
-| 500 | The request failed because an internal server error occurred. | `ApiError` |
-| Default | The default response. | `ApiError` |
-
-
-# Authorizations Reauthorize
-
-Reauthorizes an authorized PayPal account payment, by ID. To ensure that funds are still available, reauthorize a payment after its initial three-day honor period expires. Within the 29-day authorization period, you can issue multiple re-authorizations after the honor period expires.<br/><br/>If 30 days have transpired since the date of the original authorization, you must create an authorized payment instead of reauthorizing the original authorized payment.<br/><br/>A reauthorized payment itself has a new honor period of three days.<br/><br/>You can reauthorize an authorized payment once for up to 115% of the original authorized amount, not to exceed an increase of $75 USD.<br/><br/>Supports only the `amount` request parameter.<blockquote><strong>Note:</strong> This request is currently not supported for Partner use cases.</blockquote>
-
-```ts
-async authorizationsReauthorize(
-  authorizationId: string,
-  payPalRequestId: string,
-  prefer?: string,
-  body?: ReauthorizeRequest,
-  requestOptions?: RequestOptions
-): Promise<ApiResponse<AdditionalAuthorization>>
-```
-
-## Parameters
-
-| Parameter | Type | Tags | Description |
-|  --- | --- | --- | --- |
-| `authorizationId` | `string` | Template, Required | The PayPal-generated ID for the authorized payment to void. |
-| `payPalRequestId` | `string` | Header, Required | The server stores keys for 45 days. |
-| `prefer` | `string \| undefined` | Header, Optional | The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul> |
-| `body` | [`ReauthorizeRequest \| undefined`](../../doc/models/reauthorize-request.md) | Body, Optional | - |
-| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
-
-## Requires scope
-
-### Oauth2
-
-`https://uri.paypal.com/services/payments/payment/authcapture`
-
-## Response Type
-
-[`AdditionalAuthorization`](../../doc/models/additional-authorization.md)
-
-## Example Usage
-
-```ts
-const authorizationId = 'authorization_id8';
-
-const payPalRequestId = 'PayPal-Request-Id6';
-
-const body: ReauthorizeRequest = {
-  amount: {
-    currencyCode: 'USD',
-    value: '10.99',
-  },
-};
-
-try {
-  // @ts-expect-error: unused variables
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { result, ...httpResponse } = await authorizationsController.authorizationsReauthorize(
-  authorizationId,
-  payPalRequestId,
-  undefined,
-  body
-);
-  // Get more response info...
-  // const { statusCode, headers } = httpResponse;
-} catch (error) {
-  if (error instanceof ApiError) {
-    // @ts-expect-error: unused variables
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const errors = error.result;
-    // const { statusCode, headers } = error;
-  }
-}
-```
-
-## Errors
-
-| HTTP Status Code | Error Description | Exception Class |
-|  --- | --- | --- |
-| 400 | The request failed because it is not well-formed or is syntactically incorrect or violates schema. | [`AuthorizationsReauthorizeResponse400JsonError`](../../doc/models/authorizations-reauthorize-response-400-json-error.md) |
-| 401 | Authentication failed due to missing authorization header, or invalid authentication credentials. | [`M401ErrorError`](../../doc/models/m401-error-error.md) |
-| 403 | The request failed because the caller has insufficient permissions. | [`AuthorizationsReauthorizeResponse403JsonError`](../../doc/models/authorizations-reauthorize-response-403-json-error.md) |
-| 404 | The request failed because the resource does not exist. | [`AuthorizationsReauthorizeResponse404JsonError`](../../doc/models/authorizations-reauthorize-response-404-json-error.md) |
-| 422 | The request failed because it either is semantically incorrect or failed business validation. | [`AuthorizationsReauthorizeResponse422JsonError`](../../doc/models/authorizations-reauthorize-response-422-json-error.md) |
 | 500 | The request failed because an internal server error occurred. | `ApiError` |
 | Default | The default response. | `ApiError` |
 
@@ -242,6 +160,88 @@ try {
 | 403 | The request failed because the caller has insufficient permissions. | [`AuthorizationsCaptureResponse403JsonError`](../../doc/models/authorizations-capture-response-403-json-error.md) |
 | 404 | The request failed because the resource does not exist. | [`AuthorizationsCaptureResponse404JsonError`](../../doc/models/authorizations-capture-response-404-json-error.md) |
 | 422 | The request failed because it is semantically incorrect or failed business validation. | [`AuthorizationsCaptureResponse422JsonError`](../../doc/models/authorizations-capture-response-422-json-error.md) |
+| 500 | The request failed because an internal server error occurred. | `ApiError` |
+| Default | The default response. | `ApiError` |
+
+
+# Authorizations Reauthorize
+
+Reauthorizes an authorized PayPal account payment, by ID. To ensure that funds are still available, reauthorize a payment after its initial three-day honor period expires. Within the 29-day authorization period, you can issue multiple re-authorizations after the honor period expires.<br/><br/>If 30 days have transpired since the date of the original authorization, you must create an authorized payment instead of reauthorizing the original authorized payment.<br/><br/>A reauthorized payment itself has a new honor period of three days.<br/><br/>You can reauthorize an authorized payment once for up to 115% of the original authorized amount, not to exceed an increase of $75 USD.<br/><br/>Supports only the `amount` request parameter.<blockquote><strong>Note:</strong> This request is currently not supported for Partner use cases.</blockquote>
+
+```ts
+async authorizationsReauthorize(
+  authorizationId: string,
+  payPalRequestId: string,
+  prefer?: string,
+  body?: ReauthorizeRequest,
+  requestOptions?: RequestOptions
+): Promise<ApiResponse<AdditionalAuthorization>>
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `authorizationId` | `string` | Template, Required | The PayPal-generated ID for the authorized payment to void. |
+| `payPalRequestId` | `string` | Header, Required | The server stores keys for 45 days. |
+| `prefer` | `string \| undefined` | Header, Optional | The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul> |
+| `body` | [`ReauthorizeRequest \| undefined`](../../doc/models/reauthorize-request.md) | Body, Optional | - |
+| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
+
+## Requires scope
+
+### Oauth2
+
+`https://uri.paypal.com/services/payments/payment/authcapture`
+
+## Response Type
+
+[`AdditionalAuthorization`](../../doc/models/additional-authorization.md)
+
+## Example Usage
+
+```ts
+const authorizationId = 'authorization_id8';
+
+const payPalRequestId = 'PayPal-Request-Id6';
+
+const body: ReauthorizeRequest = {
+  amount: {
+    currencyCode: 'USD',
+    value: '10.99',
+  },
+};
+
+try {
+  // @ts-expect-error: unused variables
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { result, ...httpResponse } = await authorizationsController.authorizationsReauthorize(
+  authorizationId,
+  payPalRequestId,
+  undefined,
+  body
+);
+  // Get more response info...
+  // const { statusCode, headers } = httpResponse;
+} catch (error) {
+  if (error instanceof ApiError) {
+    // @ts-expect-error: unused variables
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const errors = error.result;
+    // const { statusCode, headers } = error;
+  }
+}
+```
+
+## Errors
+
+| HTTP Status Code | Error Description | Exception Class |
+|  --- | --- | --- |
+| 400 | The request failed because it is not well-formed or is syntactically incorrect or violates schema. | [`AuthorizationsReauthorizeResponse400JsonError`](../../doc/models/authorizations-reauthorize-response-400-json-error.md) |
+| 401 | Authentication failed due to missing authorization header, or invalid authentication credentials. | [`M401ErrorError`](../../doc/models/m401-error-error.md) |
+| 403 | The request failed because the caller has insufficient permissions. | [`AuthorizationsReauthorizeResponse403JsonError`](../../doc/models/authorizations-reauthorize-response-403-json-error.md) |
+| 404 | The request failed because the resource does not exist. | [`AuthorizationsReauthorizeResponse404JsonError`](../../doc/models/authorizations-reauthorize-response-404-json-error.md) |
+| 422 | The request failed because it either is semantically incorrect or failed business validation. | [`AuthorizationsReauthorizeResponse422JsonError`](../../doc/models/authorizations-reauthorize-response-422-json-error.md) |
 | 500 | The request failed because an internal server error occurred. | `ApiError` |
 | Default | The default response. | `ApiError` |
 

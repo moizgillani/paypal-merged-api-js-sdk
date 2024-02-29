@@ -12,8 +12,68 @@ const capturesController = new CapturesController(client);
 
 ## Methods
 
-* [Captures Refund](../../doc/controllers/captures.md#captures-refund)
 * [Captures Get](../../doc/controllers/captures.md#captures-get)
+* [Captures Refund](../../doc/controllers/captures.md#captures-refund)
+
+
+# Captures Get
+
+Shows details for a captured payment, by ID.
+
+```ts
+async capturesGet(
+  captureId: string,
+  requestOptions?: RequestOptions
+): Promise<ApiResponse<AdditionalCapture>>
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `captureId` | `string` | Template, Required | The PayPal-generated ID for the captured payment to refund. |
+| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
+
+## Requires scope
+
+### Oauth2
+
+`https://uri.paypal.com/services/payments/payment/authcapture`
+
+## Response Type
+
+[`AdditionalCapture`](../../doc/models/additional-capture.md)
+
+## Example Usage
+
+```ts
+const captureId = 'capture_id2';
+
+try {
+  // @ts-expect-error: unused variables
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { result, ...httpResponse } = await capturesController.capturesGet(captureId);
+  // Get more response info...
+  // const { statusCode, headers } = httpResponse;
+} catch (error) {
+  if (error instanceof ApiError) {
+    // @ts-expect-error: unused variables
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const errors = error.result;
+    // const { statusCode, headers } = error;
+  }
+}
+```
+
+## Errors
+
+| HTTP Status Code | Error Description | Exception Class |
+|  --- | --- | --- |
+| 401 | Authentication failed due to missing authorization header, or invalid authentication credentials. | [`M401ErrorError`](../../doc/models/m401-error-error.md) |
+| 403 | The request failed because the caller has insufficient permissions. | [`CapturesGetResponse403JsonError`](../../doc/models/captures-get-response-403-json-error.md) |
+| 404 | The request failed because the resource does not exist. | [`CapturesGetResponse404JsonError`](../../doc/models/captures-get-response-404-json-error.md) |
+| 500 | The request failed because an internal server error occurred. | `ApiError` |
+| Default | The default response. | `ApiError` |
 
 
 # Captures Refund
@@ -110,66 +170,6 @@ try {
 | 404 | The request failed because the resource does not exist. | [`CapturesRefundResponse404JsonError`](../../doc/models/captures-refund-response-404-json-error.md) |
 | 409 | The request failed because a previous call for the given resource is in progress. | [`CapturesRefundResponse409JsonError`](../../doc/models/captures-refund-response-409-json-error.md) |
 | 422 | The request failed because it either is semantically incorrect or failed business validation. | [`CapturesRefundResponse422JsonError`](../../doc/models/captures-refund-response-422-json-error.md) |
-| 500 | The request failed because an internal server error occurred. | `ApiError` |
-| Default | The default response. | `ApiError` |
-
-
-# Captures Get
-
-Shows details for a captured payment, by ID.
-
-```ts
-async capturesGet(
-  captureId: string,
-  requestOptions?: RequestOptions
-): Promise<ApiResponse<AdditionalCapture>>
-```
-
-## Parameters
-
-| Parameter | Type | Tags | Description |
-|  --- | --- | --- | --- |
-| `captureId` | `string` | Template, Required | The PayPal-generated ID for the captured payment to refund. |
-| `requestOptions` | `RequestOptions \| undefined` | Optional | Pass additional request options. |
-
-## Requires scope
-
-### Oauth2
-
-`https://uri.paypal.com/services/payments/payment/authcapture`
-
-## Response Type
-
-[`AdditionalCapture`](../../doc/models/additional-capture.md)
-
-## Example Usage
-
-```ts
-const captureId = 'capture_id2';
-
-try {
-  // @ts-expect-error: unused variables
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { result, ...httpResponse } = await capturesController.capturesGet(captureId);
-  // Get more response info...
-  // const { statusCode, headers } = httpResponse;
-} catch (error) {
-  if (error instanceof ApiError) {
-    // @ts-expect-error: unused variables
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const errors = error.result;
-    // const { statusCode, headers } = error;
-  }
-}
-```
-
-## Errors
-
-| HTTP Status Code | Error Description | Exception Class |
-|  --- | --- | --- |
-| 401 | Authentication failed due to missing authorization header, or invalid authentication credentials. | [`M401ErrorError`](../../doc/models/m401-error-error.md) |
-| 403 | The request failed because the caller has insufficient permissions. | [`CapturesGetResponse403JsonError`](../../doc/models/captures-get-response-403-json-error.md) |
-| 404 | The request failed because the resource does not exist. | [`CapturesGetResponse404JsonError`](../../doc/models/captures-get-response-404-json-error.md) |
 | 500 | The request failed because an internal server error occurred. | `ApiError` |
 | Default | The default response. | `ApiError` |
 
