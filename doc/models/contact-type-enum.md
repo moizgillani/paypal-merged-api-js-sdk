@@ -1,11 +1,11 @@
 
-# Phone Type Enum
+# Contact Type Enum
 
 The phone type.
 
 ## Enumeration
 
-`PhoneTypeEnum`
+`ContactTypeEnum`
 
 ## Fields
 
